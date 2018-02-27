@@ -1,0 +1,69 @@
+{
+    "name": "pixi-msdf-text",
+    "version": "1.0.0",
+    "description": "Add Multichannle-Signed distance field support PIXI.Bitmapfont",
+    "main": "./dist/pixi-msdf-text.js",
+    "typings": "./dist/pixi-msdf-text.d.ts",
+    "author": "Shen Yiming<soimy@163.com> (http://symis.me)",
+    "license": "MIT",
+    "keywords": [
+        "pixi",
+        "sdf",
+        "msdf",
+        "text",
+        "bitmap"
+    ],
+    "homepage": "https://soimy.github.io/pixi-msdf-text",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/soimy/pixi-msdf-text.git"
+    },
+    "scripts": {
+        "clean": "rimraf dist",
+        "clean:doc": "rimraf docs",
+        "clean:all": "rimraf dist docs",
+        "build": "npm run clean && webpack --config webpack.config.js --display 'verbose' --progress",
+        "build:doc": "npm run clean:doc && typedoc --theme minimal --out docs/ src/ && touch docs/.nojekyll",
+        "build:all": "npm run clean:all && npm run build && npm run build:doc",
+        "test": "mocha-webpack",
+        "cover": "cross-env NODE_ENV=coverage nyc --reporter=lcov --reporter=text npm run test && rimraf .nyc_output"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.0.10",
+        "@types/mocha": "^2.2.44",
+        "@types/node": "^9.4.6",
+        "awesome-typescript-loader": "^3.4.1",
+        "chai": "^4.1.1",
+        "coveralls": "^3.0.0",
+        "cross-env": "^5.1.3",
+        "dts-bundle": "^0.7.3",
+        "glslify-loader": "^1.0.2",
+        "istanbul": "^0.4.5",
+        "istanbul-instrumenter-loader": "^3.0.0",
+        "mocha": "^5.0.1",
+        "mocha-webpack": "^1.0.1",
+        "nyc": "^11.4.1",
+        "raw-loader": "^0.5.1",
+        "rimraf": "^2.6.2",
+        "source-map-loader": "^0.2.3",
+        "ts-node": "^4.0.2",
+        "tslint": "^5.8.0",
+        "tslint-config-standard": "^7.0.0",
+        "typedoc": "^0.10.0",
+        "typescript": "^2.6.2",
+        "webpack": "^3.11.0",
+        "webpack-node-externals": "^1.6.0"
+    },
+    "dependencies": {
+        "@types/pixi.js": "^4.7.1",
+        "pixi.js": "^4.7.0"
+    },
+    "nyc": {
+        "include": [
+            "src/**/*.js",
+            "src/**/*.ts"
+        ],
+        "instrument": false,
+        "sourceMap": false
+    }
+}

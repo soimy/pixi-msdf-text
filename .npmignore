@@ -1,0 +1,13 @@
+output
+node_modules
+docs
+coverage
+.tmp
+.DS_Store
+.eslintrc
+.gitignore
+.vscode
+.travis.yml
+*.png
+tslint.json
+webpack.config.js
