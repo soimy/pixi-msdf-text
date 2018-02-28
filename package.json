@@ -23,6 +23,7 @@
         "clean:doc": "rimraf docs",
         "clean:all": "rimraf dist docs",
         "build": "npm run clean && webpack --config webpack.config.js --display 'verbose' --progress",
+        "build:watch": "npm run clean && webpack --config webpack.config.js --watch",
         "build:doc": "npm run clean:doc && typedoc --theme minimal --out docs/ src/ && touch docs/.nojekyll",
         "build:all": "npm run clean:all && npm run build && npm run build:doc",
         "test": "mocha-webpack",

@@ -33,15 +33,15 @@ export class MSDFRenderer extends PIXI.ObjectRenderer {
             // renderer.bindVao(null);
             glData = {
                 shader: this.shader,
-                vertexBuffer: glCore.GLBuffer.createVertexBuffer(gl, msdfText.vertices, gl.STREAM_DRAW),
-                uvBuffer: glCore.GLBuffer.createVertexBuffer(gl, msdfText.uvs, gl.STREAM_DRAW),
-                indexBuffer: glCore.GLBuffer.createIndexBuffer(gl, msdfText.indices, gl.STATIC_DRAW),
+                vertexBuffer: PIXI.glCore.GLBuffer.createVertexBuffer(gl, msdfText.vertices, gl.STREAM_DRAW),
+                uvBuffer: PIXI.glCore.GLBuffer.createVertexBuffer(gl, msdfText.uvs, gl.STREAM_DRAW),
+                indexBuffer: PIXI.glCore.GLBuffer.createIndexBuffer(gl, msdfText.indices, gl.STATIC_DRAW),
                 // build the vao object that will render..
                 vao: null,
                 dirty: msdfText.dirty,
                 indexDirty: msdfText.indexDirty,
             };
-            glData.vao = new glCore.VertexArrayObject(gl)
+            glData.vao = new PIXI.glCore.VertexArrayObject(gl)
                 .addIndex(glData.indexBuffer)
                 .addAttribute(glData.vertexBuffer, glData.shader.attributes.aVertexPosition, gl.FLOAT, false, 2 * 4, 0)
                 .addAttribute(glData.uvBuffer, glData.shader.attributes.aTextureCoord, gl.FLOAT, false, 2 * 4, 0);

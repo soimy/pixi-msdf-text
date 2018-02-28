@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("pixi.js"));
+		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define(["pixi.js"], factory);
+		define([], factory);
 	else if(typeof exports === 'object')
-		exports["MSDFText"] = factory(require("pixi.js"));
+		exports["MSDFText"] = factory();
 	else
-		root["MSDFText"] = factory(root["pixi.js"]);
-})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_0__) {
+		root["MSDFText"] = factory();
+})(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -70,30 +70,24 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var MSDFText_1 = __webpack_require__(2);
+var MSDFText_1 = __webpack_require__(1);
 exports.MSDFText = MSDFText_1.MSDFText;
-var MSDFRenderer_1 = __webpack_require__(3);
+var MSDFRenderer_1 = __webpack_require__(2);
 exports.MSDFRenderer = MSDFRenderer_1.MSDFRenderer;
 
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -109,7 +103,6 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var pixi_js_1 = __webpack_require__(0);
 var MSDFText = /** @class */ (function (_super) {
     __extends(MSDFText, _super);
     function MSDFText(text, options) {
@@ -127,7 +120,7 @@ var MSDFText = /** @class */ (function (_super) {
             dropShadowColor: options.dropShadowColor || 0,
             dropShadowAlpha: options.dropShadowAlpha === undefined ? 0.5 : options.dropShadowAlpha,
             dropShadowBlur: options.dropShadowBlur || 0,
-            dropShadowOffset: options.dropShadowOffset || new pixi_js_1.Point(2, 2),
+            dropShadowOffset: options.dropShadowOffset || new PIXI.Point(2, 2),
             pxrange: options.pxrange === undefined ? 3 : options.pxrange,
         };
         if (options.strokeThickness === undefined || options.strokeThickness === 0) {
@@ -142,8 +135,8 @@ var MSDFText = /** @class */ (function (_super) {
         _this._lineSpacing = options.lineSpacing === undefined ? 0 : options.lineSpacing;
         _this._textWidth = _this._textHeight = 0;
         _this._maxWidth = options.maxWidth || 0;
-        _this._anchor = new pixi_js_1.ObservablePoint(function () { _this.dirty++; }, _this, 0, 0);
-        _this._textMetricsBound = new pixi_js_1.Rectangle();
+        _this._anchor = new PIXI.ObservablePoint(function () { _this.dirty++; }, _this, 0, 0);
+        _this._textMetricsBound = new PIXI.Rectangle();
         // Debug initialize
         _this._debugLevel = options.debugLevel || 0;
         _this.pluginName = "msdf";
@@ -152,14 +145,16 @@ var MSDFText = /** @class */ (function (_super) {
         return _this;
     }
     MSDFText.prototype.updateText = function () {
-        var fontData = pixi_js_1.extras.BitmapText.fonts[this._font.fontFace];
+        // clear all gizmo
+        this.removeChildren();
+        var fontData = PIXI.extras.BitmapText.fonts[this._font.fontFace];
         if (!fontData)
             throw new Error("Invalid fontFace: " + this._font.fontFace);
         // No beauty way to get bitmap font texture
         this._texture = this.getBitmapTexture(this._font.fontFace);
         this._font.rawSize = fontData.size;
         var scale = this._font.fontSize / fontData.size;
-        var pos = new pixi_js_1.Point(0, -this._baselineOffset * scale);
+        var pos = new PIXI.Point(0, -this._baselineOffset * scale);
         var chars = [];
         var lineWidths = [];
         var texWidth = this._texture.width;
@@ -213,8 +208,8 @@ var MSDFText = /** @class */ (function (_super) {
             chars.push({
                 line: line,
                 charCode: charCode,
-                drawRect: new pixi_js_1.Rectangle(pos.x + charData.xOffset * scale, pos.y + charData.yOffset * scale, charData.texture.width * scale, charData.texture.height * scale),
-                rawRect: new pixi_js_1.Rectangle(charData.texture.orig.x, charData.texture.orig.y, charData.texture.width, charData.texture.height),
+                drawRect: new PIXI.Rectangle(pos.x + charData.xOffset * scale, pos.y + charData.yOffset * scale, charData.texture.width * scale, charData.texture.height * scale),
+                rawRect: new PIXI.Rectangle(charData.texture.orig.x, charData.texture.orig.y, charData.texture.width, charData.texture.height),
             });
             // lastLineWidth = pos.x + (charData.texture.width * scale + charData.xOffset);
             pos.x += (charData.xAdvance + this._letterSpacing) * scale;
@@ -245,7 +240,7 @@ var MSDFText = /** @class */ (function (_super) {
                 lineNo = char.line;
                 // draw line gizmo
                 if (this._debugLevel > 1) {
-                    this.drawGizmoRect(new pixi_js_1.Rectangle(char.drawRect.x - fontData.chars[char.charCode].xOffset * scale, char.drawRect.y - fontData.chars[char.charCode].yOffset * scale, lineWidths[lineNo], fontData.lineHeight * scale), 1, 0x00FF00, 0.5);
+                    this.drawGizmoRect(new PIXI.Rectangle(char.drawRect.x - fontData.chars[char.charCode].xOffset * scale, char.drawRect.y - fontData.chars[char.charCode].yOffset * scale, lineWidths[lineNo], fontData.lineHeight * scale), 1, 0x00FF00, 0.5);
                 }
             }
         }
@@ -255,7 +250,7 @@ var MSDFText = /** @class */ (function (_super) {
         }
         this._textWidth = maxLineWidth;
         this._textHeight = maxLineHeight;
-        this._textMetricsBound = new pixi_js_1.Rectangle(0, 0, maxLineWidth, maxLineHeight);
+        this._textMetricsBound = new PIXI.Rectangle(0, 0, maxLineWidth, maxLineHeight);
         this.vertices = this.toVertices(chars);
         this.uvs = this.toUVs(chars, texWidth, texHeight);
         this.indices = this.createIndicesForQuads(chars.length);
@@ -264,7 +259,7 @@ var MSDFText = /** @class */ (function (_super) {
     };
     Object.defineProperty(MSDFText.prototype, "text", {
         get: function () { return this._text; },
-        set: function (value) { this._text = value; this.updateText(); },
+        set: function (value) { this._text = this.unescape(value); this.updateText(); },
         enumerable: true,
         configurable: true
     });
@@ -299,9 +294,9 @@ var MSDFText = /** @class */ (function (_super) {
         configurable: true
     });
     MSDFText.prototype.getBitmapTexture = function (fontFace) {
-        var fontData = pixi_js_1.extras.BitmapText.fonts[fontFace];
+        var fontData = PIXI.extras.BitmapText.fonts[fontFace];
         if (!fontData)
-            return pixi_js_1.Texture.EMPTY;
+            return PIXI.Texture.EMPTY;
         // No beauty way to get bitmap font texture, hack needed
         var texturePath = fontData.chars[Object.keys(fontData.chars)[0]].texture.baseTexture.imageUrl;
         return PIXI.utils.TextureCache[texturePath];
@@ -378,12 +373,15 @@ var MSDFText = /** @class */ (function (_super) {
         if (lineThickness === void 0) { lineThickness = 1; }
         if (lineColor === void 0) { lineColor = 0xFFFFFF; }
         if (lineAlpha === void 0) { lineAlpha = 1; }
-        var gizmo = new pixi_js_1.Graphics();
+        var gizmo = new PIXI.Graphics();
         gizmo.nativeLines = true;
         gizmo
             .lineStyle(lineThickness, lineColor, lineAlpha)
             .drawRect(rect.x, rect.y, rect.width, rect.height);
         this.addChild(gizmo);
+    };
+    MSDFText.prototype.unescape = function (input) {
+        return input.replace(/(\\n|\\r)/g, "\n");
     };
     return MSDFText;
 }(PIXI.mesh.Mesh));
@@ -391,7 +389,7 @@ exports.MSDFText = MSDFText;
 
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -407,10 +405,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var pixi_js_1 = __webpack_require__(0);
 // Shader loader
-var vertShader = __webpack_require__(4);
-var fragShader = __webpack_require__(5);
+var vertShader = __webpack_require__(3);
+var fragShader = __webpack_require__(4);
 var MSDFRenderer = /** @class */ (function (_super) {
     __extends(MSDFRenderer, _super);
     function MSDFRenderer(renderer) {
@@ -433,15 +430,15 @@ var MSDFRenderer = /** @class */ (function (_super) {
             // renderer.bindVao(null);
             glData = {
                 shader: this.shader,
-                vertexBuffer: pixi_js_1.glCore.GLBuffer.createVertexBuffer(gl, msdfText.vertices, gl.STREAM_DRAW),
-                uvBuffer: pixi_js_1.glCore.GLBuffer.createVertexBuffer(gl, msdfText.uvs, gl.STREAM_DRAW),
-                indexBuffer: pixi_js_1.glCore.GLBuffer.createIndexBuffer(gl, msdfText.indices, gl.STATIC_DRAW),
+                vertexBuffer: PIXI.glCore.GLBuffer.createVertexBuffer(gl, msdfText.vertices, gl.STREAM_DRAW),
+                uvBuffer: PIXI.glCore.GLBuffer.createVertexBuffer(gl, msdfText.uvs, gl.STREAM_DRAW),
+                indexBuffer: PIXI.glCore.GLBuffer.createIndexBuffer(gl, msdfText.indices, gl.STATIC_DRAW),
                 // build the vao object that will render..
                 vao: null,
                 dirty: msdfText.dirty,
                 indexDirty: msdfText.indexDirty,
             };
-            glData.vao = new pixi_js_1.glCore.VertexArrayObject(gl)
+            glData.vao = new PIXI.glCore.VertexArrayObject(gl)
                 .addIndex(glData.indexBuffer)
                 .addAttribute(glData.vertexBuffer, glData.shader.attributes.aVertexPosition, gl.FLOAT, false, 2 * 4, 0)
                 .addAttribute(glData.uvBuffer, glData.shader.attributes.aTextureCoord, gl.FLOAT, false, 2 * 4, 0);
@@ -486,13 +483,13 @@ PIXI.WebGLRenderer.registerPlugin("msdf", MSDFRenderer);
 
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports) {
 
 module.exports = "#define GLSLIFY 1\nattribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 translationMatrix;\nuniform mat3 projectionMatrix;\nuniform float u_fontInfoSize;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    vTextureCoord = aTextureCoord;\n    gl_Position = vec4((projectionMatrix * translationMatrix * vec3(aVertexPosition * u_fontInfoSize, 1.0)).xy, 0.0, 1.0);\n}\n"
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports) {
 
 module.exports = "#define GLSLIFY 1\nvarying vec2 vTextureCoord;\nuniform vec3 u_color;\nuniform sampler2D uSampler;\nuniform float u_alpha;\nuniform float u_fontSize;\nuniform float u_weight;\nuniform float u_pxrange;\n\nuniform vec3 tint;\n// Stroke effect parameters\nuniform float strokeWeight;\nuniform vec3 strokeColor;\n\n// Shadow effect parameters\nuniform bool hasShadow;\nuniform vec2 shadowOffset;\nuniform float shadowSmoothing;\nuniform vec3 shadowColor;\nuniform float shadowAlpha;\n\nfloat median(float r, float g, float b) {\n    return max(min(r, g), min(max(r, g), b));\n}\n\nvoid main(void)\n{\n    float smoothing = clamp(2.0 * u_pxrange / u_fontSize, 0.0, 0.5);\n\n    vec2 textureCoord = vTextureCoord * 2.;\n    vec3 sample = texture2D(uSampler, vTextureCoord).rgb;\n    float dist = median(sample.r, sample.g, sample.b);\n\n    float alpha;\n    vec3 color;\n\n    // dirty if statment, will change soon\n    if (strokeWeight > 0.0) {\n        alpha = smoothstep(strokeWeight - smoothing, strokeWeight + smoothing, dist);\n        float outlineFactor = smoothstep(u_weight - smoothing, u_weight + smoothing, dist);\n        color = mix(strokeColor, u_color, outlineFactor) * alpha;\n    } else {\n        alpha = smoothstep(u_weight - smoothing, u_weight + smoothing, dist);\n        color = u_color * alpha;\n    }\n    vec4 text = vec4(color * tint, alpha) * u_alpha;\n    if (hasShadow == false) {\n        gl_FragColor = text;\n    } else {\n        vec3 shadowSample = texture2D(uSampler, vTextureCoord - shadowOffset).rgb;\n        float shadowDist = median(shadowSample.r, shadowSample.g, shadowSample.b);\n        float distAlpha = smoothstep(0.5 - shadowSmoothing, 0.5 + shadowSmoothing, shadowDist);\n        vec4 shadow = vec4(shadowColor, shadowAlpha * distAlpha);\n        gl_FragColor = mix(shadow, text, text.a);\n    }\n}"

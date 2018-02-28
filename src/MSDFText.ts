@@ -1,4 +1,3 @@
-import { ObservablePoint, extras, Point, Texture, utils, Graphics, Rectangle } from "pixi.js";
 
 export interface MSDFTextOption {
     // Basic
@@ -7,13 +6,13 @@ export interface MSDFTextOption {
     fillColor?: number;
     weight?: number;
     // Effect
-    texture?: Texture;
+    texture?: PIXI.Texture;
     strokeColor?: number;
     strokeThickness?: number;
     dropShadow?: boolean;
     dropShadowColor?: number;
     dropShadowAlpha?: number;
-    dropShadowOffset?: Point;
+    dropShadowOffset?: PIXI.Point;
     dropShadowBlur?: number;
     // Layout
     align?: "left" | "right" | "center";
@@ -35,17 +34,17 @@ export class MSDFText extends PIXI.mesh.Mesh {
     private _textWidth: number;
     private _textHeight: number;
     private _maxWidth: number;
-    // private _maxLineHeight: number;
-    private _anchor: ObservablePoint;
+    private _anchor: PIXI.ObservablePoint;
+
     // TODO: add Effect & Layout
     private _baselineOffset: number;
     private _letterSpacing: number;
     private _lineSpacing: number;
-    // private _rawFontSize: number;
+
     // Debug
     private _debugLevel: number;
     // TODO: Metrics object
-    private _textMetricsBound: Rectangle;
+    private _textMetricsBound: PIXI.Rectangle;
 
     constructor(text: string, options: MSDFTextOption) {
         super(options.texture || PIXI.Texture.WHITE);
@@ -62,7 +61,7 @@ export class MSDFText extends PIXI.mesh.Mesh {
             dropShadowColor: options.dropShadowColor || 0,
             dropShadowAlpha: options.dropShadowAlpha === undefined ? 0.5 : options.dropShadowAlpha,
             dropShadowBlur: options.dropShadowBlur || 0,
-            dropShadowOffset: options.dropShadowOffset || new Point(2, 2),
+            dropShadowOffset: options.dropShadowOffset || new PIXI.Point(2, 2),
             pxrange: options.pxrange === undefined ? 3 : options.pxrange,
         };
         if (options.strokeThickness === undefined || options.strokeThickness === 0) {
@@ -78,8 +77,8 @@ export class MSDFText extends PIXI.mesh.Mesh {
 
         this._textWidth = this._textHeight = 0;
         this._maxWidth = options.maxWidth || 0;
-        this._anchor = new ObservablePoint(() => { this.dirty++; }, this, 0, 0);
-        this._textMetricsBound = new Rectangle();
+        this._anchor = new PIXI.ObservablePoint(() => { this.dirty++; }, this, 0, 0);
+        this._textMetricsBound = new PIXI.Rectangle();
 
         // Debug initialize
         this._debugLevel = options.debugLevel || 0;
@@ -89,14 +88,17 @@ export class MSDFText extends PIXI.mesh.Mesh {
     }
 
     public updateText() {
-        const fontData = extras.BitmapText.fonts[this._font.fontFace];
+        // clear all gizmo
+        this.removeChildren();
+
+        const fontData = PIXI.extras.BitmapText.fonts[this._font.fontFace];
         if (!fontData) throw new Error("Invalid fontFace: " + this._font.fontFace);
         // No beauty way to get bitmap font texture
         this._texture = this.getBitmapTexture(this._font.fontFace);
         this._font.rawSize = fontData.size;
 
         const scale = this._font.fontSize / fontData.size;
-        const pos = new Point(0, -this._baselineOffset * scale);
+        const pos = new PIXI.Point(0, -this._baselineOffset * scale);
         const chars = [];
         const lineWidths: number[] = [];
         const texWidth = this._texture.width;
@@ -161,13 +163,13 @@ export class MSDFText extends PIXI.mesh.Mesh {
             chars.push({
                 line,
                 charCode,
-                drawRect: new Rectangle(
+                drawRect: new PIXI.Rectangle(
                     pos.x + charData.xOffset * scale,
                     pos.y + charData.yOffset * scale,
                     charData.texture.width * scale,
                     charData.texture.height * scale,
                 ),
-                rawRect: new Rectangle(
+                rawRect: new PIXI.Rectangle(
                     charData.texture.orig.x,
                     charData.texture.orig.y,
                     charData.texture.width,
@@ -206,7 +208,7 @@ export class MSDFText extends PIXI.mesh.Mesh {
                 lineNo = char.line;
                 // draw line gizmo
                 if (this._debugLevel > 1) {
-                    this.drawGizmoRect(new Rectangle(
+                    this.drawGizmoRect(new PIXI.Rectangle(
                         char.drawRect.x - fontData.chars[char.charCode].xOffset * scale,
                         char.drawRect.y - fontData.chars[char.charCode].yOffset * scale,
                         lineWidths[lineNo],
@@ -222,7 +224,7 @@ export class MSDFText extends PIXI.mesh.Mesh {
 
         this._textWidth = maxLineWidth;
         this._textHeight = maxLineHeight;
-        this._textMetricsBound = new Rectangle(0, 0, maxLineWidth, maxLineHeight);
+        this._textMetricsBound = new PIXI.Rectangle(0, 0, maxLineWidth, maxLineHeight);
 
         this.vertices = this.toVertices(chars);
         this.uvs = this.toUVs(chars, texWidth, texHeight);
@@ -233,17 +235,17 @@ export class MSDFText extends PIXI.mesh.Mesh {
     }
 
     public get text(): string { return this._text; }
-    public set text(value) { this._text = value; this.updateText(); }
+    public set text(value) { this._text = this.unescape(value); this.updateText(); }
     public get fontData(): any { return this._font; }
     public get glDatas(): any { return this._glDatas; }
     public get textWidth(): number { return this._textWidth; }
     public get textHeight(): number { return this._textHeight; }
     public get maxWidth(): number { return this._maxWidth; }
-    public get textMetric(): Rectangle { return this._textMetricsBound; }
+    public get textMetric(): PIXI.Rectangle { return this._textMetricsBound; }
 
-    private getBitmapTexture(fontFace: string): Texture {
-        const fontData = extras.BitmapText.fonts[fontFace];
-        if (!fontData) return Texture.EMPTY;
+    private getBitmapTexture(fontFace: string): PIXI.Texture {
+        const fontData = PIXI.extras.BitmapText.fonts[fontFace];
+        if (!fontData) return PIXI.Texture.EMPTY;
         // No beauty way to get bitmap font texture, hack needed
         const texturePath: string = fontData.chars[Object.keys(fontData.chars)[0]].texture.baseTexture.imageUrl;
         return PIXI.utils.TextureCache[texturePath];
@@ -322,11 +324,15 @@ export class MSDFText extends PIXI.mesh.Mesh {
     }
 
     private drawGizmoRect(rect: PIXI.Rectangle, lineThickness: number = 1, lineColor: number = 0xFFFFFF, lineAlpha: number = 1): void {
-        const gizmo = new Graphics();
+        const gizmo = new PIXI.Graphics();
         gizmo.nativeLines = true;
         gizmo
         .lineStyle(lineThickness, lineColor, lineAlpha)
         .drawRect(rect.x, rect.y, rect.width, rect.height);
         this.addChild(gizmo);
+    }
+
+    private unescape(input: string): string {
+        return input.replace(/(\\n|\\r)/g, "\n");
     }
 }
