@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
+		module.exports = factory(require("pixi.js"));
 	else if(typeof define === 'function' && define.amd)
-		define([], factory);
+		define(["pixi.js"], factory);
 	else if(typeof exports === 'object')
-		exports["text-msdf"] = factory();
+		exports["MSDFText"] = factory(require("pixi.js"));
 	else
-		root["text-msdf"] = factory();
-})(typeof self !== 'undefined' ? self : this, function() {
+		root["MSDFText"] = factory(root["pixi.js"]);
+})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_0__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -77,7 +77,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports) {
 
-module.exports = require("pixi.js");
+module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
 
 /***/ }),
 /* 1 */
@@ -411,18 +411,14 @@ var pixi_js_1 = __webpack_require__(0);
 // Shader loader
 var vertShader = __webpack_require__(4);
 var fragShader = __webpack_require__(5);
-// const sdfShader = require("glslify!raw!./sdf.frag");
 var MSDFRenderer = /** @class */ (function (_super) {
     __extends(MSDFRenderer, _super);
     function MSDFRenderer(renderer) {
-        var _this = _super.call(this, renderer) || this;
-        // initialize shader
-        var gl = _this.renderer.gl;
-        _this.shader = new PIXI.Shader(gl, vertShader, fragShader);
-        return _this;
+        return _super.call(this, renderer) || this;
     }
     MSDFRenderer.prototype.onContextChange = function () {
-        this.shader.gl = this.renderer.gl;
+        var gl = this.renderer.gl;
+        this.shader = new PIXI.Shader(gl, vertShader, fragShader);
     };
     MSDFRenderer.prototype.render = function (msdfText) {
         var renderer = this.renderer;

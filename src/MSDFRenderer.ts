@@ -4,7 +4,6 @@ import { glCore } from "pixi.js";
 // Shader loader
 const vertShader = require("./msdf.vert");
 const fragShader = require("./msdf.frag");
-// const sdfShader = require("glslify!raw!./sdf.frag");
 
 export class MSDFRenderer extends PIXI.ObjectRenderer {
 
@@ -12,14 +11,11 @@ export class MSDFRenderer extends PIXI.ObjectRenderer {
 
     constructor(renderer: PIXI.WebGLRenderer) {
         super(renderer);
-
-        // initialize shader
-        const gl = this.renderer.gl;
-        this.shader = new PIXI.Shader(gl, vertShader, fragShader);
     }
 
     public onContextChange(): void {
-        this.shader.gl = this.renderer.gl;
+        const gl = this.renderer.gl;
+        this.shader = new PIXI.Shader(gl, vertShader, fragShader);
     }
 
     public render(msdfText: MSDFText) {

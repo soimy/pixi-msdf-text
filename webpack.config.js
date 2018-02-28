@@ -18,7 +18,7 @@ module.exports = [{
     output: {
         path: DIST_PATH,
         filename: PLUGIN_NAME + '.js',
-        library: 'text-msdf',
+        library: 'MSDFText',
         libraryTarget: 'umd'
     },
     resolve: {
@@ -44,14 +44,14 @@ module.exports = [{
         new CheckerPlugin(),
         new DtsBundlePlugin()
     ],
-    externals: [nodeExternals()]
+    externals: ['pixi.js']
 }, {
     devtool: 'source-map',
     entry: path.join(__dirname, 'src', 'index.ts'),
     output: {
         path: DIST_PATH,
         filename: PLUGIN_NAME + '.min.js',
-        library: 'text-msdf',
+        library: 'MSDFText',
         libraryTarget: 'umd'
     },
     resolve: {
@@ -77,7 +77,7 @@ module.exports = [{
         new CheckerPlugin(),
         new webpack.optimize.UglifyJsPlugin({ minimize: true })
     ],
-    externals: [nodeExternals()]
+    externals: ['pixi.js']
 }];
 
 function DtsBundlePlugin() {}
