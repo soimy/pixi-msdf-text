@@ -32,7 +32,7 @@ function onAssetsLoaded() {
         dropShadowColor: 0x000000,
         dropShadowOffset: new PIXI.Point(0.004, 0.004),
         dropShadowAlpha: 0.4,
-        dropShadowBlur: 0.01,
+        dropShadowBlur: 0.1,
         align: "center",
         letterSpacing: 0,
         baselineOffset: 8,
